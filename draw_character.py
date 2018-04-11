@@ -4,31 +4,26 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from torchvision import transforms
 import numpy as np
-
-
-
-
-
-
-
-
-# font = ImageFont.truetype('./font/gb2312.ttf', size=32)
-# img = draw_char('U', font, 25, 32)
-# img.save('./test.png')
+import json
 
 class GeneratorImage:
 
-    def __init__(self, background_path, word_file_path):
+    def __init__(self, background_path, word_file_path, font_path):
         self.background_files = os.listdir(background_path)
+        
         for i in range(len(self.background_files)):
             self.background_files[i] = os.path.join(background_path, self.background_files[i])
-        self.words = []
+        
         with open(word_file_path, 'r') as f:
-            for line in f.readlines():
-                line = line.strip()
-                self.words.append(line)
-        self.rotation_transform = transforms.RandomRotation((-30, 30))
+                self.word_dict = json.load(f)
+        self.words = list(self.word_dict.keys())
+        self.rotation_transform = transforms.RandomRotation((-30, 30), resample=Image.BICUBIC)
         self.random_crop = transforms.RandomCrop(32)
+        self.font_path = font_path
+
+    def set_font_size(self, size):
+        font = ImageFont.truetype(self.font_path, size)
+        return font
 
     def random_get_background(self):
         background_index = np.random.randint(low=0, high=len(self.background_files))
@@ -47,12 +42,7 @@ class GeneratorImage:
         return img
 
     def generator_word_img(self, img):
-        h, w = img.size
-        random_scale = 0.5 + (1 - 0.5) * np.random.random()
-        from math import ceil
-        h = ceil(h * random_scale)
-        new_img = img.resize((h, h))
-        new_img = self.rotation_transform.__call__(new_img)
+        new_img = self.rotation_transform.__call__(img)
         return new_img
 
     def paste(self, word_image, background):
@@ -85,20 +75,28 @@ class GeneratorImage:
         new_img = Image.merge("RGBA", (r, g, b, a))
         return new_img
     
-    def save_generation_image(self, ch, font, canvas_size, amount, generation_path, groundtruth_path):
-        basename = ch.encode('unicode-escape').decode()
+    def save_generation_image(self, ch, canvas_size, amount, generation_path, 
+                groundtruth_path, is_need_groundtruth = True):
+        basename = str(self.word_dict[ch])
         for i in range(amount):
+            
+            random_scale = 0.5 + (1 - 0.5) * np.random.random()
+            from math import ceil
+            size = ceil(canvas_size * random_scale)
+            font = self.set_font_size(size)
+            
             img = self.draw_char(ch, font, canvas_size)
             img = self.generator_word_img(img)
             background = self.random_get_background()
             mix1, mix2 = self.paste(img, background)
 
             generation_save = os.path.join(generation_path, basename + '_%d.png' % i)
-            groundtruth_save = os.path.join(groundtruth_path, basename + '_%d.png' % i)
-            
             mix1.save(generation_save)
-            mix2.save(groundtruth_save)
+
+            if is_need_groundtruth == True:
+                groundtruth_save = os.path.join(groundtruth_path, basename + '_%d.png' % i)
+                mix2.save(groundtruth_save)
         
-        # print(basename.encode('utf-8').decode('unicode_escape'))
+
 
 
