@@ -90,11 +90,11 @@ class GeneratorImage:
             background = self.random_get_background()
             mix1, mix2 = self.paste(img, background)
 
-            generation_save = os.path.join(generation_path, basename + '_%d.png' % i)
+            generation_save = os.path.join(generation_path, basename + '_%d.jpg' % i)
             mix1.save(generation_save)
 
             if is_need_groundtruth == True:
-                groundtruth_save = os.path.join(groundtruth_path, basename + '_%d.png' % i)
+                groundtruth_save = os.path.join(groundtruth_path, basename + '_%d.jpg' % i)
                 mix2.save(groundtruth_save)
         
 
