@@ -1,3 +1,4 @@
+from langconv import Converter
 class CharProcess():
     def __init__(self):
         self.chinese = set()
@@ -12,6 +13,24 @@ class CharProcess():
     def ishan(self, text):
         return '\u4e00' <= text <= '\u9fff' 
 
+    def isSimplifyChinese(self, text):
+        if self.ishan(text):
+            t = Converter('zh-hans').convert(text)
+            if t == text:
+                return True
+            else:
+                return False
+        else:
+            return False
+    
+    def isTraditionalChinese(self, text):
+        if self.ishan(text):
+            if self.isSimplifyChinese(text):
+                return False
+            else:
+                return True
+        else:
+            return False
 
     def is_half_width_digit(self, text):
         return '\u0030' <= text <= '\u0039'

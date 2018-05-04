@@ -1,4 +1,11 @@
+# self define
 img/
+single_word_image/
+extra_font/
+data/
+prediction_result/
+prediction_result.zip
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

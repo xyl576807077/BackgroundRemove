@@ -53,7 +53,7 @@ class GeneratorImage:
         background.paste(word_image, (random_x_offset, random_y_offset, 
                     random_x_offset + h, random_y_offset + w), mask=a)
         
-        groundtruth = Image.new("RGB", (32, 32), (0, 0, 0))
+        groundtruth = Image.new("L", (32, 32), (0, 0, 0))
         white_word_img = self.whiten_image(word_image)
         groundtruth.paste(white_word_img, (random_x_offset, random_y_offset, 
                     random_x_offset + h, random_y_offset + w), mask=a)
@@ -94,7 +94,7 @@ class GeneratorImage:
             mix1.save(generation_save)
 
             if is_need_groundtruth == True:
-                groundtruth_save = os.path.join(groundtruth_path, basename + '_%d.jpg' % i)
+                groundtruth_save = os.path.join(groundtruth_path, basename + '_%d.png' % i)
                 mix2.save(groundtruth_save)
         
 
