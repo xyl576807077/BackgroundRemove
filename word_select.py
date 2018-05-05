@@ -19,10 +19,10 @@ class WordSelect:
             labels.remove('\ue76c')
             labels.remove('$$')
         
-        self.language_ration = {}
+        self.language_ratio = {}
         for label in labels:
             index = hard_encode(label)
-            self.language_ration[index] = self.language_ration.get(index, 0) + 1
+            self.language_ratio[index] = self.language_ratio.get(index, 0) + 1
         
         self.freq = [{}, {}, {}, {}]
         
@@ -45,7 +45,10 @@ class WordSelect:
     def update_freq(self, select_words):
         for word in select_words:
             code = hard_encode(word)
+            if self.freq[code][word] == 1:
+                self.language_ratio[code] -= 1
             self.freq[code][word] = max(self.freq[code][word] - 1, 0)
+            
     
     def get_canditate(self):
         res = [[], [], [], []]
@@ -66,7 +69,7 @@ class WordSelect:
         length = self.get_seq_len()
         res = {}
         for i in range(length):
-            label = random_interval_select(self.language_ration)
+            label = random_interval_select(self.language_ratio)
             res[label] = res.get(label, 0) + 1
         return res
 
@@ -78,8 +81,8 @@ class WordSelect:
         for f in func:
             canditate = f(lang_word_dic, canditate)
         
-        if len(canditate[3]) == 0:
-            raise NameError("used all symbols")
+        # if len(canditate[3]) == 0:
+        #     raise NameError("used all symbols")
         
         words = ''
 
@@ -153,3 +156,9 @@ for i in range(4000000):
     words = wordselect.get_words(func=[only_full, only_half])
     with open('./generate_word.txt', 'a') as f:
         f.write(words + '\n')
+    with open('./log.txt', 'a') as f:
+        tmp = ''
+        for key, value in wordselect.language_ratio.items():
+            tmp = tmp + str(key) + ':' + str(value) + '\t'
+        tmp += '\n'
+        f.write(tmp)

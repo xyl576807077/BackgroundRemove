@@ -26,10 +26,15 @@ def random_interval_select(dic):
             continue
         new_dic[key] = cnt
     s = np.random.uniform(0, cnt)
+    
     for key, value in new_dic.items():
-        if s < value:
+        if s <= value:
             k = key
             break
+    try:
+        s = k
+    except:
+        print(s, cnt, dic)
     return k
 
 def hard_encode(text):
