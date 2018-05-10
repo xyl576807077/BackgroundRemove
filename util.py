@@ -37,6 +37,10 @@ def random_interval_select(dic):
         print(s, cnt, dic)
     return k
 
+def simplified_to_tradition(text):
+    t = Converter('zh-hant').convert(text)
+    return t
+
 def hard_encode(text):
     cp = CharProcess()
     if cp.ishan(text):
@@ -46,6 +50,17 @@ def hard_encode(text):
         else:
             return 1
     elif cp.is_pure_char(text):
+        return 2
+    else:
+        return 3
+
+def hard_encode_language(text):
+    cp = CharProcess()
+    if cp.is_pure_chinese(text):
+        return 0
+    elif cp.is_pure_char(text):
+        return 1
+    elif cp.is_pure_symbol(text):
         return 2
     else:
         return 3
@@ -65,6 +80,35 @@ def classify(labels):
         rel_res[item] = res[item]
     return rel_res
 
+def remove_other_language(text, code):
+    if code == 3:
+        return text
+    else:
+        res = ''
+        for w in text:
+            if hard_encode_language(w) == code:
+                res += w
+        return res
+
+def cut_sentence(text, length):
+    is_first = np.random.uniform(0, 1)
+    if is_first > 0.5:
+        text = text[0:length]
+    else:
+        text = text[len(text) - length:]
+    assert len(text) == length
+    return text
+
+def init_language_and_length(lists):
+    res = {0:{}, 1:{}, 2:{}, 3:{}}
+    for item in lists:
+        code = hard_encode_language(item)
+        length = len(item)
+        if res.get(code).get(length) == None:
+            res[code][length] = [item]
+        else:
+            res[code][length].append(item)
+    return res
 # classify(['我', '1', '.'])
 
 # dic = {1: 22963,
@@ -90,3 +134,8 @@ def classify(labels):
 #     21: 2492}
 
 # random_interval_select(dic)
+# print(hard_encode_language('５Ｖ)'))
+# cp = CharProcess()
+# text = 'Ｌ、'
+# print(cp.is_pure_symbol(text))
+# print(cp.is_full_width_symbol('Ｌ'))

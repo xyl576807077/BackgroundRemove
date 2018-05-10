@@ -6,6 +6,9 @@ data/
 prediction_result/
 prediction_result.zip
 finish_word.txt
+background/
+generate_from_train.txt
+generate/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

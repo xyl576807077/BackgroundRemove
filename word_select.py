@@ -81,6 +81,12 @@ class WordSelect:
         for f in func:
             canditate = f(lang_word_dic, canditate)
         
+        flag = 0
+        for i in range(4):
+            flag += len(canditate[i])
+
+        if flag == 0:
+            return None
         # if len(canditate[3]) == 0:
         #     raise NameError("used all symbols")
         
@@ -150,12 +156,17 @@ class WordSelect:
 
 
 
-wordselect = WordSelect('./data/all_chars_dict.json', 2570)
-for i in range(4000000):
-    print(i)
-    words = wordselect.get_words(func=[only_full, only_half])
-    with open('./generate_word.txt', 'a') as f:
-        f.write(words + '\n')
+# wordselect = WordSelect('./data/all_chars_dict.json', 2570)
+# print(wordselect.freq)
+# i = 1
+# while(1):
+#     print(i)
+#     i += 1
+#     words = wordselect.get_words(func=[only_full, only_half])
+#     if words == None:
+#         break
+#     with open('./generate_word.txt', 'a') as f:
+#         f.write(words + '\n')
     # with open('./log.txt', 'a') as f:
     #     tmp = ''
     #     for key, value in wordselect.language_ratio.items():

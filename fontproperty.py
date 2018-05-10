@@ -8,6 +8,7 @@ class Fontproperty:
         with open(simplifychinese, 'r') as f:
             self.simplifychinese = json.load(f)
         
+        
         with open(traditionchinese, 'r') as f:
             self.traditionchinese = json.load(f)
 
