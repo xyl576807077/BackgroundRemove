@@ -45,6 +45,7 @@ def hard_encode(text):
     cp = CharProcess()
     if cp.ishan(text):
         t = Converter('zh-hans').convert(text)
+        # print(t, text)
         if t == text:
             return 0
         else:

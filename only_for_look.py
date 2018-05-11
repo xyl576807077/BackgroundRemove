@@ -5,18 +5,26 @@ import pickle
 from collections import OrderedDict
 from util import *
 
-with open('./data/train_list.json', 'r') as f:
-    train_list = json.load(f)
+with open('./extra_font/word_font_dict.json', 'r') as f:
+    dic = json.load(f)
 
-with open('./data/word_dict.pickle', 'rb') as f:
-    word_dict = pickle.load(f)
+with open('./extra_font/windows_font_dict.json', 'r') as f:
+    dic1 = json.load(f)
 
-res = {}
-for key, value in word_dict.items():
-    for w in value:
-        if '銷' in value:
-            print(key)
-            break
+with open('./data/all_chars_dict.json', 'r') as f:
+    all_chars_dict = json.load(f)
+
+common_chinese = set(['著'])
+
+for key in all_chars_dict.keys():
+    if hard_encode(key) == 1 and key not in common_chinese:
+        dic[key] = dic1[key]
+
+with open('./extra_font/word_font_dict_unstable.json', 'w') as f:
+    json.dump(dic, f, ensure_ascii=False)
+
+
+
 
 # 0 0.4606252232006759
 # 1 0.32793296575992753

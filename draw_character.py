@@ -140,6 +140,7 @@ def select_font(sentence, word_font_dict, font_dict):
         if sentence[i] == ' ':
             continue
         font_set.intersection_update(word_font_dict[sentence[i]])
+        # print(sentence[i], len(font_set))
     font_list = list(font_set)
     assert len(font_set) != 0
     font_name = font_list[int(np.random.uniform(0, len(font_set)))]
@@ -162,26 +163,26 @@ def toRgb(hex_color):
     return np.array(res)
 
 def random_select_color(img):
-    img = np.array(img)
-    h, w, c = img.shape
-    feature = []
-    for i in range(h):
-        for j in range(w):
-            feature.append(img[i][j])
+    # img = np.array(img)
+    # h, w, c = img.shape
+    # feature = []
+    # for i in range(h):
+    #     for j in range(w):
+    #         feature.append(img[i][j])
 
-    clf = KMeans(n_clusters=5).fit(feature)
-    cluster = clf.cluster_centers_
+    # clf = KMeans(n_clusters=5, max_iter=10).fit(feature)
+    # cluster = clf.cluster_centers_
     basic_color = ['#FF0000', '#FFC0CB', '#FFA500', '#FFFF00', '#800080', '#008000', '#0000FF', '#A52A2A', '#FFFFFF', '#808080']
     
-    pos = -1
-    Min = 1e9
-    for i in range(len(basic_color)):
-        rgb = toRgb(basic_color[i])
-        dis = np.sum(np.sqrt(np.multiply(cluster - rgb, cluster - rgb)))
-        if Min < dis:
-            Min = dis
-            pos = i
-    basic_color.pop(pos)
+    # pos = -1
+    # Min = 1e9
+    # for i in range(len(basic_color)):
+    #     rgb = toRgb(basic_color[i])
+    #     dis = np.sum(np.sqrt(np.multiply(cluster - rgb, cluster - rgb)))
+    #     if Min < dis:
+    #         Min = dis
+    #         pos = i
+    # basic_color.pop(pos)
     
     index = int(np.random.uniform(0, len(basic_color)))
     return basic_color[index]
@@ -217,7 +218,7 @@ def whiten_image(img):
     return new_img
 
 if __name__ == '__main__':
-    with open('./extra_font/windows_font_dict.json', 'r') as f:
+    with open('./extra_font/word_font_dict.json', 'r') as f:
         word_font_dict = json.load(f)
 
     with open('./extra_font/font_dict.json', 'r') as f:
@@ -231,24 +232,25 @@ if __name__ == '__main__':
     with open('./generate_from_train.txt', 'r') as f:
         for line in f.readlines():
             line = line.strip()
-            # background_img = random_get_background('./background')
-            # color = random_select_color(background_img)
+            background_img = random_get_background('./background')
+            color = random_select_color(background_img)
             font = select_font(line, word_font_dict, font_dict)
-            # if np.random.uniform(0, 1) > 0.3:
-            #     word_img = draw_character(line, font, color, 0)
-            # else:
-            #     word_img = draw_character(line, font, color, 1)
-            # word_img = rotation_transform.__call__(word_img)
-            # code = hard_encode_language(line)
-            # cnt_dict[code] = cnt_dict.get(code, 0) + 1
-            # filename = str(code) + '_' + '%08d' % cnt_dict[code] + '.png'
-            # data_filename = os.path.join('./generate/data', filename)
-            # label_filename = os.path.join('./generate/label', filename)
+            if np.random.uniform(0, 1) > 0.3:
+                word_img = draw_character(line, font, color, 0)
+            else:
+                word_img = draw_character(line, font, color, 1)
+            word_img = rotation_transform.__call__(word_img)
+            code = hard_encode_language(line)
+            cnt_dict[code] = cnt_dict.get(code, 0) + 1
+            filename = str(code) + '_' + '%08d' % cnt_dict[code] + '.jpg'
+            data_filename = os.path.join('./generate/data', filename)
+            label_filename = os.path.join('./generate/label', filename)
             
-            # data_img, label_img = paste(word_img, background_img)
-            # data_img.save(data_filename)
-            # label_img.save(label_filename)
+            data_img, label_img = paste(word_img, background_img)
+            data_img.save(data_filename)
+            label_img.save(label_filename)
             
             cnt += 1
-            print(cnt)
+            print(cnt, font)
+
 
