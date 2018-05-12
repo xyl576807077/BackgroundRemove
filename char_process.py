@@ -108,6 +108,8 @@ class CharProcess():
     def is_pure_symbol(self, text):
         flag = True
         for w in text:
+            if self.is_pure_char(w):
+                return False
             # print(self.is_full_width_symbol(w), self.is_half_width_symbol(w))
             flag = flag and (self.is_full_width_symbol(w) or self.is_half_width_symbol(w))
         return flag

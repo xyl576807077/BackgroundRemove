@@ -8,6 +8,7 @@ prediction_result.zip
 finish_word.txt
 background/
 generate_from_train.txt
+generate_from_train1.txt
 generate/
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -111,3 +112,4 @@ ENV/
 # mypy
 .mypy_cache/
 
+generate_from_train1.txt
