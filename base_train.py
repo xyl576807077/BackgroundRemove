@@ -8,7 +8,7 @@ import numpy as np
 cp = CharProcess()
 
 generate_path = 'generate_from_train1.txt'
-with open('./data/train_word_list1.json', 'r') as f:
+with open('./data/train_word_list.json', 'r') as f:
 	word_list = json.load(f)
 
 with open(generate_path, 'w') as f:
@@ -42,7 +42,9 @@ for i in range(4):
 
 
 language_and_length_dict = init_language_and_length(All)
-
+from time import time
+start = time()
+ii = 1
 while extra != 0:
 	language = random_interval_select(language_ratio)
 	length = random_interval_select(length_ratio)
@@ -90,11 +92,16 @@ while extra != 0:
 			tmp_sen = canditate[select_index]
 			new_sen += tmp_sen
 		
-		with open(generate_path, 'a') as f:
-			f.write(new_sen + '\n')
+		# with open(generate_path, 'a') as f:
+		# 	f.write(new_sen + '\n')
 		extra -= 1
 		print(extra)
 		language_ratio[language] -= 1
+		ii += 1
+		if ii >= 1000:
+			break
+stop = time()
+print(stop - start)
 
 
 		

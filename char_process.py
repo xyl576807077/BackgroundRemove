@@ -11,9 +11,11 @@ class CharProcess():
     
 
     def ishan(self, text):
-        return '\u4e00' <= text <= '\u9fff' 
+        return '\u4e00' <= text <= '\u9fff'  or text == '㨂' or text == ''
 
     def isSimplifyChinese(self, text):
+        if text == '㨂' or text == '':
+            return False
         if self.ishan(text):
             t = Converter('zh-hans').convert(text)
             if t == text:
@@ -24,6 +26,8 @@ class CharProcess():
             return False
     
     def isTraditionalChinese(self, text):
+        if text == '' or text == '㨂':
+            return True
         if self.ishan(text):
             if self.isSimplifyChinese(text):
                 return False
@@ -127,4 +131,5 @@ class CharProcess():
 
 
 # cp = CharProcess()
-# print(cp.is_pure_symbol('REALSHINETECHNOLOGYCO..LTD'))
+# print(cp.isSimplifyChinese('眞'))
+

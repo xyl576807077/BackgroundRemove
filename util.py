@@ -41,6 +41,10 @@ def simplified_to_tradition(text):
     t = Converter('zh-hant').convert(text)
     return t
 
+def tradition_to_simplified(text):
+    t = Converter('zh-hans').convert(text)
+    return t
+
 def hard_encode(text):
     cp = CharProcess()
     if cp.ishan(text):
@@ -110,33 +114,11 @@ def init_language_and_length(lists):
         else:
             res[code][length].append(item)
     return res
-# classify(['我', '1', '.'])
 
-# dic = {1: 22963,
-#     2: 21997,
-#     3: 73336,
-#     4: 25366,
-#     5: 12318,
-#     6: 9778,
-#     7: 7699,
-#     8: 6191,
-#     9: 4090,
-#     10: 3356,
-#     11: 2763,
-#     12: 1841,
-#     13: 1429,
-#     14: 1052,
-#     15: 900,
-#     16: 700,
-#     17: 593,
-#     18: 454,
-#     19: 405,
-#     20: 295,
-#     21: 2492}
+def cal_dict_sum(dic):
+    cnt = 0
+    for key, value in dic.items():
+        cnt += value
+    return cnt
 
-# random_interval_select(dic)
-# print(hard_encode_language('５Ｖ)'))
-# cp = CharProcess()
-# text = 'Ｌ、'
-# print(cp.is_pure_symbol(text))
-# print(cp.is_full_width_symbol('Ｌ'))
+# print(simplified_to_tradition('真'))
